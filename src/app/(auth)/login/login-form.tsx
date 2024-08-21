@@ -9,11 +9,13 @@ export function LoginForm() {
   const GithubComponent = () => {
     return (
       <Button
+        variant="outline"
+        className="flex items-center justify-center w-full"
         onClick={() => {
           signIn("github")
         }}
       >
-        <Icons.gitHub /> Github
+        <Icons.gitHub className="size-4 mr-2" /> Github
       </Button>
     )
   }
@@ -27,7 +29,9 @@ export function LoginForm() {
   return (
     <div>
       {authProviders.map((provider) => (
-        <div key={provider.name}>{provider.component}</div>
+        <div key={provider.name} className="flex">
+          {provider.component}
+        </div>
       ))}
     </div>
   )
