@@ -3,39 +3,44 @@ import Link from "next/link"
 
 import { Button } from "../ui/button"
 
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "Blog", href: "/blog" },
+  { name: "Doc", href: "/doc" },
+  { name: "About", href: "/about" },
+]
+
 export function Nav() {
   return (
-    <header className="fixed left-0 pt-8 z-[1000000000] duration-500 transition-all w-full bg-transparent">
-      <nav className="container flex items-center justify-between">
-        <div className="nav-logo">
-          <Link href="/">
-            {/* <Image src="/logo.svg" width={24} height={24} alt="logo" /> */}
-            NSNKit
+    <header>
+      <nav className="container flex justify-between items-center py-5 relative">
+        <div>
+          <Link href="#">
+            <span className="text-2xl font-semibold">NSNKit</span>
+            {/* <Image
+              src="/logo.svg"
+              width={124}
+              height={47}
+              sizes="min(124px, 100vw)"
+              alt="logo"
+            /> */}
           </Link>
         </div>
-        <ul className="hidden lg:flex mx-auto bg-white dark:bg-secondary p-2.5 shadow-nav rounded-3xl [&>*:not(:last-child)]:me-1">
-          <li>
-            <Link
-              href="#"
-              className="flex items-center text-base font-medium md:px-5 md:py-[5px] border rounded-xl"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="flex items-center text-base font-medium md:px-5 md:py-[5px]"
-            >
-              Blog
-            </Link>
-          </li>
-        </ul>
-        <ul className="flex items-center max-lg:ml-auto  [&>*:not(:last-child)]:me-2.5">
-          <li>
-            <Button>Login</Button>
-          </li>
-        </ul>
+        <div className="flex items-center p-3 gap-5 shadow-nav rounded-2xl border border-[rgba(32, 30, 28, 0.08)]">
+          {navLinks.map((link) => (
+            <div className="flex justify-start">
+              <Link
+                className="px-4 py-1 text-sm cursor-pointer rounded-md leading-relaxed hover:text-primary hover:bg-primary/5 transition-all"
+                href="#"
+              >
+                {link.name}
+              </Link>
+            </div>
+          ))}
+        </div>
+        <div>
+          <Button>Login</Button>
+        </div>
       </nav>
     </header>
   )
