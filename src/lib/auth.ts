@@ -16,17 +16,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: ({ token, user, trigger }) => {
+    jwt: async ({ token, user, trigger }) => {
       if (user) {
         token.id = user.id
       }
-
       // New user sign up
       if (trigger === "signUp" && user.email) {
         // SendWelcomeEmail({
         //   email: user.email,
         //   title: "Welcome",
         // })
+      } else if (trigger === "update") {
+        const refreshedUser = await db.user.findUnique({
+          where: {
+            id: token.sub,
+          },
+        })
+        if (refreshedUser) {
+          token.name = refreshedUser.name
+        }
       }
       return token
     },

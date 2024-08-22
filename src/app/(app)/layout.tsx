@@ -1,10 +1,10 @@
 import { Nav } from "@/components/nav/nav"
 
-interface MarketingLayoutProps {
+interface AppLayoutProps {
   children: React.ReactNode
 }
 
-export default function MarketingLayout({ children }) {
+export default function AppLayoutProps({ children }) {
   return (
     <div>
       <Nav />
