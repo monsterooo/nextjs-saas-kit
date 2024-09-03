@@ -6,9 +6,9 @@ import { ICategoryTree } from "@/types/dashboard"
 import { fetcher } from "../fetcher"
 
 export function useCategory() {
-  const { data, error, mutate } = useSWR<ICategoryTree[]>(
+  const { data, isLoading, error, mutate } = useSWR<ICategoryTree[]>(
     "/api/category",
     fetcher
   )
-  return { data, error, mutate }
+  return { data, isLoading, error, mutate }
 }

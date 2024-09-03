@@ -31,11 +31,11 @@ import {
 import { Icons } from "../icons"
 
 interface IProps {
+  isLoading: boolean
   categories: ICategoryTree[]
 }
 
-export function CategoryTable({ categories }: IProps) {
-  console.log("categories:", categories)
+export function CategoryTable({ isLoading, categories }: IProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [expanded, setExpanded] = useState<ExpandedState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -179,7 +179,7 @@ export function CategoryTable({ categories }: IProps) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {isLoading ? "Loading..." : "No results."}
                 </TableCell>
               </TableRow>
             )}
