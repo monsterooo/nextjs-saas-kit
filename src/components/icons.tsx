@@ -1,9 +1,14 @@
 import {
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
   KeyRound,
   LayoutDashboard,
   LucideProps,
   Plus,
   Settings,
+  Shapes,
+  X,
 } from "lucide-react"
 
 export const Icons = {
@@ -11,6 +16,10 @@ export const Icons = {
   layoutDashboard: LayoutDashboard,
   keyRound: KeyRound,
   plus: Plus,
+  chevronRight: ChevronRight,
+  chevronDown: ChevronDown,
+  x: X,
+  shapes: Shapes,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

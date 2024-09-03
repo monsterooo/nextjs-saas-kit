@@ -1,3 +1,5 @@
+import { Category } from "@prisma/client"
+
 export interface NavLink {
   title: string
   label?: string
@@ -12,4 +14,8 @@ export interface SideLink extends NavLink {
 export interface NavLinkProps extends SideLink {
   subLink?: boolean
   closeNav: () => void
+}
+
+export interface ICategoryTree extends Category {
+  children?: CategoryTree[]
 }

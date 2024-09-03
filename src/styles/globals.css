@@ -69,4 +69,43 @@
   body {
     /* @apply bg-background text-foreground; */
   }
+
+  /* components */
+  .category-tree {
+    @apply p-2;
+    .rc-tree-treenode-selected {
+      .rc-tree-node-content-wrapper {
+        @apply bg-primary/10;
+      }
+    }
+    .rc-tree-title {
+      @apply text-sm;
+    }
+    .rc-tree-treenode {
+      @apply flex items-center pb-1;
+    }
+    .rc-tree-node-content-wrapper {
+      @apply px-1;
+    }
+    .rc-tree-node-content-wrapper, .rc-tree-switcher {
+      @apply cursor-pointer rounded-sm;
+      &:hover {
+        @apply bg-slate-100;
+      }
+    }
+    .rc-tree-indent-unit {
+      @apply w-6 block;
+    }
+    .rc-tree-switcher {
+      @apply w-6 relative flex justify-center items-center;
+      &:before {
+        @apply w-6 h-6;
+        pointer-events: none;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+  }
 }

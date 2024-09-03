@@ -1,6 +1,9 @@
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
-import { CategoryTable } from "@/components/dashboard/category-table"
 import { Icons } from "@/components/icons"
+
+import { CategoriesPageClient } from "./page-client"
 
 export default function CategoriesPage() {
   return (
@@ -8,15 +11,17 @@ export default function CategoriesPage() {
       <div className="mb-2 flex items-center justify-between space-y-2">
         <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
         <div className="flex items-center space-x-2">
-          <Button>
-            <Icons.plus />
-            New Category
-          </Button>
+          <Link href="/dashboard/categories/new">
+            <Button>
+              <Icons.plus />
+              New Category
+            </Button>
+          </Link>
         </div>
       </div>
 
       <div>
-        <CategoryTable />
+        <CategoriesPageClient />
       </div>
     </div>
   )
