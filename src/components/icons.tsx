@@ -1,9 +1,16 @@
-import { KeyRound, LayoutDashboard, LucideProps, Settings } from "lucide-react"
+import {
+  KeyRound,
+  LayoutDashboard,
+  LucideProps,
+  Plus,
+  Settings,
+} from "lucide-react"
 
 export const Icons = {
   settings: Settings,
   layoutDashboard: LayoutDashboard,
   keyRound: KeyRound,
+  plus: Plus,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
