@@ -1,14 +1,13 @@
 import { usePathname } from "next/navigation"
 
+import { pathnameWithOutLocale } from "@/lib/utils"
+
 export default function useCheckActiveNav() {
   const pathname = usePathname()
+  const url = pathnameWithOutLocale(pathname)
 
   const checkActiveNav = (nav: string) => {
-    // const pathArray = pathname.split("/").filter((item) => item !== "")
-    // if (nav === "/" && pathArray.length < 1) return true
-    // return pathArray.includes(nav.replace(/^\//, ""))
-
-    return pathname.startsWith(nav)
+    return url.startsWith(nav)
   }
 
   return { checkActiveNav }

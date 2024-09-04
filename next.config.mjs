@@ -1,16 +1,20 @@
 import "./env.mjs"
 
+import createNextIntlPlugin from "next-intl/plugin"
+
+const withNextIntl = createNextIntlPlugin()
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/dashboard",
-        destination: "/dashboard/home",
+        source: "/:locale/dashboard",
+        destination: "/:locale/dashboard/home",
         permanent: true,
       },
     ]
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)
