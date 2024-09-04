@@ -1,4 +1,5 @@
-import ContentSection from "./components/content-section"
+import ContentSection from "@/components/dashboard/content-section"
+
 import { SettingsPageClient } from "./page-client"
 
 export default async function SettingsPage() {

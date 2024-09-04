@@ -1,12 +1,13 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
 
-import { useCategory } from "@/lib/swr/use-category"
+import { useCategory, useCategoryById } from "@/lib/swr/use-category"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,7 +25,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { toast } from "@/components/ui/use-toast"
 import { CategoryTree } from "@/components/category-tree"
 import { Icons } from "@/components/icons"
 
@@ -32,11 +32,16 @@ const CategorySchema = z.object({
   name: z.string().min(2, {
     message: "name must be at least 2 characters.",
   }),
-  parentId: z.string().optional(),
+  parentId: z.any(),
 })
 
-export function CategoryForm() {
+interface IProps {
+  id?: string
+}
+
+export function CategoryForm({ id }: IProps) {
   const { data: categories, mutate } = useCategory()
+  const { data: categoryDetail, error, isLoading } = useCategoryById(id)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const form = useForm<z.infer<typeof CategorySchema>>({
@@ -51,16 +56,28 @@ export function CategoryForm() {
     try {
       setLoading(true)
 
-      const response = await fetch("/api/category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
+      let response
+
+      if (!id) {
+        response = await fetch("/api/category", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        })
+      } else if (id) {
+        response = await fetch(`/api/category/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        })
+      }
 
       if (response.ok) {
-        toast({ description: "Category created successfully" })
+        toast.success("Category created successfully")
         await mutate()
         router.push("/dashboard/categories")
         return
@@ -97,6 +114,18 @@ export function CategoryForm() {
     if (!parentId) return null
     return findSubtreeById(categories, parentId)
   }, [parentId, categories])
+
+  useEffect(() => {
+    if (id && categoryDetail) {
+      form.setValue("name", categoryDetail.name)
+      form.setValue("parentId", categoryDetail.parentId)
+    }
+  }, [categoryDetail, id])
+
+  if (error && id) {
+    toast.error(error.message)
+    router.push("/dashboard/categories")
+  }
 
   return (
     <div>

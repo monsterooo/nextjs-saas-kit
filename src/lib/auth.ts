@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { NextAuthOptions } from "next-auth"
+import { getServerSession, NextAuthOptions } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
 import { env } from "@/env"
@@ -45,4 +45,10 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
+}
+
+export const getSession = async () => {
+  const session = await getServerSession(authOptions)
+
+  return session
 }

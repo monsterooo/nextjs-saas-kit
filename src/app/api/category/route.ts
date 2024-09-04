@@ -1,28 +1,41 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth/next"
+import { z } from "zod"
 
-import { authOptions } from "@/lib/auth"
+import { getSession } from "@/lib/auth"
 import { db } from "@/lib/db"
 
+const createSchema = z.object({
+  name: z.string().min(2).max(30).optional(),
+  parentId: z.string().optional(),
+})
+
 export const POST = async function POST(req) {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session?.user) {
-    return new Response(null, { status: 403 })
+    return new Response("Unauthorized.", { status: 403 })
   }
 
-  const payload = await req.json()
-  await db.category.create({
-    data: {
-      name: payload.name,
-      userId: session.user.id,
+  try {
+    const payload = await createSchema.parse(await req.json())
 
-      ...(payload.parentId && {
-        parentId: payload.parentId,
-      }),
-    },
-  })
-  return new Response(null, { status: 200 })
+    await db.category.create({
+      data: {
+        name: payload.name,
+        userId: session.user.id,
+
+        ...(payload.parentId && {
+          parentId: payload.parentId,
+        }),
+      },
+    })
+    return new Response(null, { status: 200 })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return new Response(JSON.stringify(error.issues), { status: 422 })
+    }
+    return new Response("Create category failed.", { status: 500 })
+  }
 }
 
 export const GET = async function GET(req) {
@@ -36,6 +49,9 @@ export const GET = async function GET(req) {
           children: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   })
   return NextResponse.json(categories)

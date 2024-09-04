@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import Link from "next/link"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,10 +16,25 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
+import { format } from "date-fns"
 import { MoreHorizontal } from "lucide-react"
+import { toast } from "sonner"
+import { mutate } from "swr"
 
 import { ICategoryTree } from "@/types/dashboard"
-import { Button } from "@/components/ui/button"
+import { DATE_FORMAT } from "@/lib/constants"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -44,6 +60,14 @@ interface IProps {
   categories: ICategoryTree[]
 }
 
+type ColumnMeta = {
+  meta: {
+    size: number | string
+  }
+}
+
+type AugmentedColumnDef = ColumnDef<ICategoryTree> & ColumnMeta
+
 export function CategoryTable({ isLoading, categories }: IProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [expanded, setExpanded] = useState<ExpandedState>({})
@@ -51,10 +75,26 @@ export function CategoryTable({ isLoading, categories }: IProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
 
-  const columns: ColumnDef<ICategoryTree>[] = [
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`/api/category/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      toast.success("Category deleted successfully.")
+      mutate("/api/category")
+    } catch (error) {}
+  }
+
+  const columns: AugmentedColumnDef[] = [
     {
       accessorKey: "name",
       header: "Name",
+      meta: {
+        size: "70%",
+      },
       cell: ({ row }) => {
         return (
           <div
@@ -81,8 +121,19 @@ export function CategoryTable({ isLoading, categories }: IProps) {
       },
     },
     {
+      accessorKey: "createdAt",
+      header: "Created At",
+      meta: {
+        size: "20%",
+      },
+      cell: ({ row }) => format(row.getValue("createdAt"), DATE_FORMAT),
+    },
+    {
       id: "actions",
-      enableHiding: false,
+      header: "Actions",
+      meta: {
+        size: "10%",
+      },
       cell: ({ row }) => {
         return (
           <DropdownMenu>
@@ -94,14 +145,51 @@ export function CategoryTable({ isLoading, categories }: IProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText("123456789")}
-              >
-                Copy payment ID
+              <DropdownMenuItem>
+                <Link
+                  className="flex items-center"
+                  href={`/dashboard/categories/edit/${row.original.id}`}
+                >
+                  <Icons.edit className="mr-2 size-4" />
+                  Edit
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
+              >
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <div className="flex items-center">
+                      <Icons.delete className="mr-2 size-4" />
+                      Delete
+                    </div>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. Your category will be
+                        deleted immediately
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className={buttonVariants({ variant: "destructive" })}
+                        onClick={() => handleDelete(row.original.id)}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -179,7 +267,13 @@ export function CategoryTable({ isLoading, categories }: IProps) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{
+                        width: (header.column.columnDef as AugmentedColumnDef)
+                          .meta.size,
+                      }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -223,10 +317,10 @@ export function CategoryTable({ isLoading, categories }: IProps) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"

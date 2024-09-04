@@ -1,7 +1,6 @@
-import { getServerSession } from "next-auth/next"
 import { z } from "zod"
 
-import { authOptions } from "@/lib/auth"
+import { getSession } from "@/lib/auth"
 import { db } from "@/lib/db"
 
 const updateSchema = z.object({
@@ -10,7 +9,7 @@ const updateSchema = z.object({
 
 export const PATCH = async function PATCH(req) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
 
     if (!session?.user) {
       return new Response(null, { status: 403 })

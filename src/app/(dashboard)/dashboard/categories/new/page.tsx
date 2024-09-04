@@ -1,4 +1,5 @@
-import ContentSection from "../../settings/components/content-section"
+import ContentSection from "@/components/dashboard/content-section"
+
 import { CategoryForm } from "../form"
 
 export default function NewCategoryPage() {

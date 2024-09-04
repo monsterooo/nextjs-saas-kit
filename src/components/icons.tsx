@@ -1,13 +1,14 @@
 import {
   ChevronDown,
   ChevronRight,
-  ChevronUp,
+  FilePenLine,
   KeyRound,
   LayoutDashboard,
   LucideProps,
   Plus,
   Settings,
   Shapes,
+  Trash2,
   X,
 } from "lucide-react"
 
@@ -19,7 +20,9 @@ export const Icons = {
   chevronRight: ChevronRight,
   chevronDown: ChevronDown,
   x: X,
+  edit: FilePenLine,
   shapes: Shapes,
+  delete: Trash2,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

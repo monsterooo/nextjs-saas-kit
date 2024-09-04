@@ -12,3 +12,11 @@ export function useCategory() {
   )
   return { data, isLoading, error, mutate }
 }
+
+export function useCategoryById(id: string) {
+  const { data, isLoading, error, mutate } = useSWR<Category>(
+    id ? `/api/category/${id}` : null,
+    fetcher
+  )
+  return { data, isLoading, error, mutate }
+}
