@@ -4,7 +4,7 @@ The Open Source Next.js SaaS development template.
 
 If this repo has been helpful to you, please give us a star ⭐ to help us keep moving forward.
 
-![localhost_3000_en_dashboard_home](https://github.com/user-attachments/assets/b5328263-b7cd-4b81-a4f7-74914e546609)
+![screenshot](https://github.com/user-attachments/assets/3b608e24-0904-4cab-8694-9c2dc4533b62)
 
 ## 🐣 Getting Started
 

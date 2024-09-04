@@ -1,8 +1,8 @@
 import { useState } from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Link } from "@/i18n/routing"
 
-import { cn } from "@/lib/utils"
+import { cn, pathnameWithOutLocale } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import {
   Select,
@@ -26,7 +26,8 @@ export default function SidebarNav({
   ...props
 }: SidebarNavProps) {
   const pathname = usePathname()
-  const [val, setVal] = useState(pathname ?? "/dashboard/settings")
+  const url = pathnameWithOutLocale(pathname)
+  const [val, setVal] = useState(url ?? "/dashboard/settings")
 
   const handleSelect = (e: string) => {
     setVal(e)
@@ -66,7 +67,7 @@ export default function SidebarNav({
               href={item.href}
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                pathname === item.href
+                url === item.href
                   ? "bg-muted hover:bg-muted"
                   : "hover:bg-transparent hover:underline",
                 "justify-start"
