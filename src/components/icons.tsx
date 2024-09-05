@@ -5,6 +5,7 @@ import {
   KeyRound,
   LayoutDashboard,
   LucideProps,
+  Newspaper,
   Plus,
   Settings,
   Shapes,
@@ -23,6 +24,7 @@ export const Icons = {
   edit: FilePenLine,
   shapes: Shapes,
   delete: Trash2,
+  blog: Newspaper,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

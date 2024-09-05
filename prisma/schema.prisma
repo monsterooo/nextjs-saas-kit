@@ -22,6 +22,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   categories    Category[]
+  blogs         Blog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -87,4 +88,22 @@ model Category {
   updatedAt DateTime @updatedAt
 
   @@map("categories")
+}
+
+model Blog {
+  id         String   @id @default(cuid())
+  title      String
+  summary    String?
+  content    String
+  tags       String[]
+  coverImage String
+  author     String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blogs")
 }

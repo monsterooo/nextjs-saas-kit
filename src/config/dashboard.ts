@@ -12,6 +12,11 @@ export const sideLinks: SideLink[] = [
     icon: "shapes",
   },
   {
+    title: "Blogs",
+    href: "/dashboard/blogs",
+    icon: "blog",
+  },
+  {
     title: "Settings",
     href: "/dashboard/settings",
     icon: "settings",
