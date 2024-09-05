@@ -49,6 +49,16 @@ export function BlogsForm() {
 
   const handleSubmit = (values) => {}
 
+  const handleUpload = async (e) => {
+    const formData = new FormData()
+    formData.append("file", e.target.files[0])
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    })
+  }
+
   return (
     <div>
       <Form {...form}>
@@ -108,7 +118,8 @@ export function BlogsForm() {
                   <Input
                     type="file"
                     placeholder="Please upload your cover image"
-                    {...field}
+                    onChange={handleUpload}
+                    // {...field}
                   />
                 </FormControl>
                 <FormMessage />
