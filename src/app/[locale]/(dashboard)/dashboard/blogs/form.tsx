@@ -1,11 +1,13 @@
 "use client"
 
+import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
+import { env } from "@/env"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -57,6 +59,15 @@ export function BlogsForm() {
       method: "POST",
       body: formData,
     })
+
+    if (!response.ok) {
+      toast.error("Upload failed.")
+      return
+    }
+
+    const result = await response.json()
+    console.log("result", result)
+    form.setValue("coverImage", result.url)
   }
 
   return (
@@ -123,6 +134,14 @@ export function BlogsForm() {
                   />
                 </FormControl>
                 <FormMessage />
+                {field.value && (
+                  <Image
+                    src={`${env.NEXT_PUBLIC_SUPABASE_STORAGE_PATH}${field.value}`}
+                    width={100}
+                    height={100}
+                    alt="coverImage"
+                  />
+                )}
               </FormItem>
             )}
           />

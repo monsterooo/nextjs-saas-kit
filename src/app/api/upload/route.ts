@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { v4 as uuidv4 } from "uuid"
 
+import { env } from "@/env"
 import { getSession } from "@/lib/auth"
 import { supabase } from "@/lib/supabase"
 import { getFileExtension } from "@/lib/utils"
@@ -18,7 +19,7 @@ export const POST = async function POST(req) {
   const suffix = getFileExtension(file.type)
   const name = uuidv4()
   const filePath = `${directory}/${name}${suffix}`
-  await supabase.storage.from("NSNKit").upload(filePath, file)
+  await supabase.storage.from(env.SUPABASE_BUCKET).upload(filePath, file)
 
-  return NextResponse.json({})
+  return NextResponse.json({ url: filePath })
 }
